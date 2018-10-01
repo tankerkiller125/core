@@ -66,7 +66,7 @@ class CreateDiscussionController extends AbstractCreateController
         $actor = $request->getAttribute('actor');
         $ipAddress = Arr::get($request->getServerParams(), 'REMOTE_ADDR', '127.0.0.1');
 
-        if (! $request->getAttribute('bypassFloodgate')) {
+        if ($actor->can('floodgate.throttling') && ! $request->getAttribute('bypassFloodgate')) {
             $this->floodgate->assertNotFlooding($actor);
         }
 
