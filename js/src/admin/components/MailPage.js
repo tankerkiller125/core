@@ -15,6 +15,7 @@ export default class MailPage extends Page {
 
     this.driverFields = {};
     this.fields = ['mail_driver', 'mail_from'];
+    this.fieldsRequired = [];
     this.values = {};
 
     const settings = app.data.settings;
@@ -35,6 +36,9 @@ export default class MailPage extends Page {
           this.values[key] = m.prop(settings[key]);
         }
       );
+
+      this.fieldsRequired = response['data'].map(driver => driver['attributes']['fieldsRequired']).flat();
+
       this.loading = false;
       m.redraw();
     });
@@ -50,6 +54,8 @@ export default class MailPage extends Page {
         </div>
       );
     }
+
+    const fields = this.driverFields[this.values.mail_driver()];
 
     return (
       <div className="MailPage">
@@ -82,14 +88,19 @@ export default class MailPage extends Page {
               ]
             })}
 
-            {Object.keys(this.driverFields[this.values.mail_driver()]).length > 0 && FieldSet.component({
+            {Object.keys(fields).length > 0 && FieldSet.component({
               label: app.translator.trans(`core.admin.email.${this.values.mail_driver()}_heading`),
               className: 'MailPage-MailSettings',
               children: [
+                fields.filter(field => this.fieldsRequired.includes(field) && !this.values[field]()).length > 0 && Alert.component({
+                  children: app.translator.trans('core.admin.email.incomplete_configuration_text'),
+                  dismissible: false,
+                }),
+
                 <div className="MailPage-MailSettings-input">
-                  {this.driverFields[this.values.mail_driver()].flatMap(field => [
-                    <label>{app.translator.trans(`core.admin.email.${field}_label`)}</label>,
-                    <input className="FormControl" value={this.values[field]() || ''} oninput={m.withAttr('value', this.values[field])} />
+                  {fields.flatMap(field => [
+                    <label>{app.translator.trans(`core.admin.email.${field}_label`)} {this.fieldsRequired.includes(field) ? '*' : ''}</label>,
+                    <input className="FormControl" value={this.values[field]() || ''} oninput={m.withAttr('value', this.values[field])} required={this.fieldsRequired.includes(field)} />
                   ])}
                 </div>
               ]

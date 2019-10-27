@@ -39,6 +39,7 @@ class MailDriverSerializer extends AbstractSerializer
 
         return [
             'fields' => $driver->availableSettings(),
+            'fieldsRequired' => $driver->requiredFields(),
         ];
     }
 
