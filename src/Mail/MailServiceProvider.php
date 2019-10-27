@@ -43,10 +43,6 @@ class MailServiceProvider extends AbstractServiceProvider
                 return $carry && ! empty($settings->get($field));
             }, true);
 
-            if (! $valid) {
-                app('log')->error('driver invalidly configured');
-            }
-
             return $valid ? $driver : $this->app->make(NullDriver::class);
         });
 
