@@ -12,8 +12,6 @@
 namespace Flarum\Mail;
 
 use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Mail\Transport\LogTransport;
-use Psr\Log\LoggerInterface;
 use Swift_NullTransport;
 use Swift_Transport;
 

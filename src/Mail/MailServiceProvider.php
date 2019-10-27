@@ -40,10 +40,12 @@ class MailServiceProvider extends AbstractServiceProvider
             // check that all required fields have been filled
             $settings = $this->app->make(SettingsRepositoryInterface::class);
             $valid = $driver && array_reduce($driver->requiredFields(), function ($carry, $field) use ($settings) {
-                return $carry && !empty($settings->get($field));
+                return $carry && ! empty($settings->get($field));
             }, true);
 
-            if (!$valid) app('log')->error('driver invalidly configured');
+            if (! $valid) {
+                app('log')->error('driver invalidly configured');
+            }
 
             return $valid ? $driver : $this->app->make(NullDriver::class);
         });
