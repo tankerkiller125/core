@@ -170,6 +170,8 @@ class ForumServiceProvider extends AbstractServiceProvider
                     $this->app
                 );
                 $validator->whenSettingsSaving($event);
+
+                $this->app->make(ValidateMailConfiguration::class)->whenSettingsSaving($event);
             }
         );
     }

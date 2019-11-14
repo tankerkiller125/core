@@ -6,6 +6,10 @@ import Select from '../../common/components/Select';
 import LoadingIndicator from '../../common/components/LoadingIndicator';
 import saveSettings from '../utils/saveSettings';
 
+// From https://www.30secondsofcode.org/snippet/deepFlatten
+// Array.prototype.flatMap is not supported in IE or Edge
+const deepFlatten = arr => [].concat(...arr.map(v => (Array.isArray(v) ? deepFlatten(v) : v)));
+
 export default class MailPage extends Page {
   init() {
     super.init();
@@ -30,14 +34,12 @@ export default class MailPage extends Page {
         {}
       );
 
-      Object.keys(this.driverFields).flatMap(key => this.driverFields[key]).forEach(
+      deepFlatten(Object.keys(this.driverFields).map(key =>  Object.keys(this.driverFields[key]))).forEach(
         key => {
           this.fields.push(key);
           this.values[key] = m.prop(settings[key]);
         }
       );
-
-      this.fieldsRequired = response['data'].map(driver => driver['attributes']['fieldsRequired']).flat();
 
       this.loading = false;
       m.redraw();
@@ -56,6 +58,7 @@ export default class MailPage extends Page {
     }
 
     const fields = this.driverFields[this.values.mail_driver()];
+    const fieldKeys = Object.keys(fields);
 
     return (
       <div className="MailPage">
@@ -88,19 +91,19 @@ export default class MailPage extends Page {
               ]
             })}
 
-            {Object.keys(fields).length > 0 && FieldSet.component({
+            {fieldKeys.length > 0 && FieldSet.component({
               label: app.translator.trans(`core.admin.email.${this.values.mail_driver()}_heading`),
               className: 'MailPage-MailSettings',
               children: [
-                fields.filter(field => this.fieldsRequired.includes(field) && !this.values[field]()).length > 0 && Alert.component({
+                fieldKeys.filter(field => fields[field] && fields[field].indexOf('required') !== -1 && !this.values[field]()).length > 0 && Alert.component({
                   children: app.translator.trans('core.admin.email.incomplete_configuration_text'),
                   dismissible: false,
                 }),
 
                 <div className="MailPage-MailSettings-input">
-                  {fields.flatMap(field => [
-                    <label>{app.translator.trans(`core.admin.email.${field}_label`)} {this.fieldsRequired.includes(field) ? '*' : ''}</label>,
-                    <input className="FormControl" value={this.values[field]() || ''} oninput={m.withAttr('value', this.values[field])} required={this.fieldsRequired.includes(field)} />
+                  {fieldKeys.map(field => [
+                    <label>{app.translator.trans(`core.admin.email.${field}_label`)} {(fields[field] || '').indexOf('required') !== -1 ? '*' : ''}</label>,
+                    <input className="FormControl" value={this.values[field]() || ''} oninput={m.withAttr('value', this.values[field])} required={(fields[field] || '').indexOf('required') !== -1} />
                   ])}
                 </div>
               ]

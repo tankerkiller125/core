@@ -11,6 +11,7 @@
 
 namespace Flarum\Mail;
 
+use Flarum\Admin\ValidateMailConfiguration;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Mail\Mailer;
@@ -32,18 +33,7 @@ class MailServiceProvider extends AbstractServiceProvider
         });
 
         $this->app->singleton('mail.driver', function () {
-            $settings = $this->app->make(SettingsRepositoryInterface::class);
-            $drivers = $this->app->make('mail.supported_drivers');
-
-            $driver = $this->app->make($drivers[$settings->get('mail_driver')]);
-
-            // check that all required fields have been filled
-            $settings = $this->app->make(SettingsRepositoryInterface::class);
-            $valid = $driver && array_reduce($driver->requiredFields(), function ($carry, $field) use ($settings) {
-                return $carry && ! empty($settings->get($field));
-            }, true);
-
-            return $valid ? $driver : $this->app->make(NullDriver::class);
+            return $this->app->make(ValidateMailConfiguration::class)->getWorkingDriver();
         });
 
         $this->app->alias('mail.driver', DriverInterface::class);
