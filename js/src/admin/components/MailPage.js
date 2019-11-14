@@ -19,7 +19,6 @@ export default class MailPage extends Page {
 
     this.driverFields = {};
     this.fields = ['mail_driver', 'mail_from'];
-    this.fieldsRequired = [];
     this.values = {};
 
     const settings = app.data.settings;
