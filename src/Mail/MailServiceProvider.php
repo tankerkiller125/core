@@ -11,7 +11,7 @@
 
 namespace Flarum\Mail;
 
-use Flarum\Admin\ValidateMailConfiguration;
+use Flarum\Forum\ValidateMailConfiguration;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Mail\Mailer;
