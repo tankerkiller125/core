@@ -70,14 +70,16 @@ class ValidateMailConfiguration
      * @param array $settings
      * @return Validator
      */
-    protected function getValidator($driver, $settings) {
+    protected function getValidator($driver, $settings)
+    {
         $rules = $driver->availableSettings();
         $settings = Arr::only($settings, array_keys($rules));
 
         return $this->container->make('validator')->make($settings, $rules);
     }
 
-    protected function getDriver($settings) {
+    protected function getDriver($settings)
+    {
         $drivers = $this->container->make('mail.supported_drivers');
         $specifiedDriver = Arr::get($settings, 'mail_driver');
         $driverClass = Arr::get($drivers, $specifiedDriver);
