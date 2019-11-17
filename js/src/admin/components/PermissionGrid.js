@@ -154,10 +154,10 @@ export default class PermissionGrid extends Component {
   replyItems() {
     const items = new ItemList();
 
-    items.add('floodgateThrottling', {
+    items.add('postWithoutThrottle', {
       icon: 'fas fa-swimmer',
-      label: app.translator.trans('core.admin.permissions.floodgate_throttling_label'),
-      permission: 'floodgate.throttling'
+      label: app.translator.trans('core.admin.permissions.floodgate_post_without_throttle_label'),
+      permission: 'floodgate.postWithoutThrottle'
     }, 120);
 
     items.add('reply', {
@@ -239,7 +239,7 @@ export default class PermissionGrid extends Component {
       label: app.translator.trans('core.admin.permissions.edit_users_label'),
       permission: 'user.edit'
     }, 60);
-    
+
     return items;
   }
 
