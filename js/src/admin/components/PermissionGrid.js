@@ -154,12 +154,6 @@ export default class PermissionGrid extends Component {
   replyItems() {
     const items = new ItemList();
 
-    items.add('postWithoutThrottle', {
-      icon: 'fas fa-swimmer',
-      label: app.translator.trans('core.admin.permissions.floodgate_post_without_throttle_label'),
-      permission: 'floodgate.postWithoutThrottle'
-    }, 120);
-
     items.add('reply', {
       icon: 'fas fa-reply',
       label: app.translator.trans('core.admin.permissions.reply_to_discussions_label'),
@@ -215,6 +209,12 @@ export default class PermissionGrid extends Component {
       label: app.translator.trans('core.admin.permissions.delete_discussions_forever_label'),
       permission: 'discussion.delete'
     }, 80);
+
+    items.add('postWithoutThrottle', {
+      icon: 'fas fa-swimmer',
+      label: app.translator.trans('core.admin.permissions.floodgate_post_without_throttle_label'),
+      permission: 'floodgate.postWithoutThrottle'
+    }, 70);
 
     items.add('editPosts', {
       icon: 'fas fa-pencil-alt',
