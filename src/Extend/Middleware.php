@@ -15,8 +15,8 @@ use Zend\Stratigility\MiddlewarePipe;
 
 class Middleware implements ExtenderInterface
 {
-    protected $middlewares = [];
-    protected $frontend;
+    private $middlewares = [];
+    private $frontend;
 
     public function __construct(string $frontend)
     {
